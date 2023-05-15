@@ -1,0 +1,68 @@
+@import '~node_modules/modern-normalize/modern-normalize.css';
+.wrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: burlywood;
+
+  width: 100%;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  text-align: center;
+}
+.input {
+  padding: 10px 15px;
+  font-size: 15px;
+  border-radius: 6px;
+  border-color: bisque;
+  outline: none;
+}
+.input:focus {
+  border-color: chocolate;
+}
+
+button {
+  display: inline-block;
+  padding: 10px 15px;
+
+  font-size: 15px;
+  font-weight: bold;
+  border-radius: 6px;
+  border-color: bisque;
+  background-color: cornsilk;
+  transform: scale(1);
+  transition: transform 250ms ease-in;
+}
+button:hover,
+button:focus {
+  background-color: slategrey;
+  transform: scale(1.1);
+}
+.button-search {
+  margin-left: 15px;
+}
+.button-load {
+  background-color: burlywood;
+  margin-left: 50%;
+}
+
+.load-more {
+  display: none;
+}
+
+.gallery {
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: 120px;
+  margin-left: 20px;
+  gap: 20px;
+}
+.photo-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: end;
+}
+.info {
+  display: flex;
+  gap: 20px;
+}
