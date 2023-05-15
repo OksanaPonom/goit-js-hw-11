@@ -65,8 +65,11 @@ async function onFormSubmit(evt) {
   }
   const array = await searchImages();
 
-  if ((totalImages !== 0 && totalImages === hits) || totalImages > hits) {
+  if (totalImages !== 0 || totalImages === hits || totalImages > hits) {
     Notify.info(`Hooray! We found ${totalImages} images.`);
+  }
+
+  if ((totalImages !== 0 && totalImages === hits) || totalImages > hits) {
     refs.btnLoad.classList.remove('load-more');
   }
 
@@ -122,6 +125,7 @@ function makeMessage() {
     Notify.info("We're sorry, but you've reached the end of search results.");
   }
 }
+
 function addClassToBtnLoad() {
   if (hits === totalImages) {
     refs.btnLoad.classList.add('load-more');
