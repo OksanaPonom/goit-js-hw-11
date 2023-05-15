@@ -39,7 +39,7 @@ button:focus {
   transform: scale(1.1);
 }
 .button-search {
-  margin-left: 15px;
+  margin-left: 20px;
 }
 .button-load {
   background-color: burlywood;
