@@ -8,15 +8,9 @@ const refs = {
   form: document.querySelector('#search-form'),
   input: document.querySelector('.input'),
   btnSearch: document.querySelector('.button-search'),
+  btnLoad: document.querySelector('.button-load'),
   galleryImage: document.querySelector('.gallery'),
-  targetEl: document.querySelector('.js-guard'),
 };
-let options = {
-  root: null,
-  rootMargin: '300px',
-};
-
-const observer = new IntersectionObserver(onLoadMore, options);
 
 let inputValue = '';
 let page = 1;
@@ -29,14 +23,15 @@ const gallery = new SimpleLightbox('.gallery a', {
   loop: false,
 });
 
-document.addEventListener('scroll', () => {});
 refs.form.addEventListener('submit', onFormSubmit);
 refs.input.addEventListener('input', () =>
   refs.btnSearch.removeAttribute('disabled')
 );
+refs.btnLoad.addEventListener('click', onLoadMore);
 
 async function onFormSubmit(evt) {
   evt.preventDefault();
+
   refs.galleryImage.innerHTML = '';
   page = 1;
   hits = 0;
@@ -46,32 +41,40 @@ async function onFormSubmit(evt) {
     Notify.warning('Please, enter what you want to find ');
     return;
   }
+
   const resp = await searchImagesHandler(inputValue, page);
+
   hits += resp.hits.length;
   totalImages = resp.totalHits;
+
   makeCheckingForm();
   markupGallery(resp.hits, refs.galleryImage);
   gallery.refresh();
-  observer.observe(refs.targetEl);
+  makeMessage();
+  addClassToBtnLoad();
   refs.btnSearch.setAttribute('disabled', '');
 }
 
-async function onLoadMore(entries, observer) {
-  entries.forEach(async entry => {
-    if (entry.isIntersecting) {
-      page += 1;
-      const resp = await searchImagesHandler(inputValue, page);
-      hits += resp.hits.length;
-      markupGallery(resp.hits, refs.galleryImage);
-      gallery.refresh();
-      if (hits === totalImages && hits !== 0) {
-        observer.unobserve(refs.targetEl);
-        Notify.info(
-          "We're sorry, but you've reached the end of search results."
-        );
-      }
-    }
-  });
+async function onLoadMore() {
+  page += 1;
+  const resp = await searchImagesHandler(inputValue, page);
+  hits += resp.hits.length;
+  markupGallery(resp.hits, refs.galleryImage);
+  gallery.refresh();
+  makeMessage();
+  addClassToBtnLoad();
+}
+
+function makeMessage() {
+  if (hits === totalImages && hits !== 0) {
+    Notify.info("We're sorry, but you've reached the end of search results.");
+  }
+}
+
+function addClassToBtnLoad() {
+  if (hits === totalImages) {
+    refs.btnLoad.classList.add('load-more');
+  }
 }
 
 function makeCheckingForm() {
@@ -84,5 +87,9 @@ function makeCheckingForm() {
   }
   if (totalImages !== 0 || totalImages === hits || totalImages > hits) {
     Notify.info(`Hooray! We found ${totalImages} images.`);
+  }
+
+  if ((totalImages !== 0 && totalImages === hits) || totalImages > hits) {
+    refs.btnLoad.classList.remove('load-more');
   }
 }
